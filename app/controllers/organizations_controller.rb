@@ -1,8 +1,9 @@
 class OrganizationsController < ApplicationController
-  before_action :authorize_request, only: [:show, :create, :update, :destroy]
-  before_action :set_organization, only: [:update, :destroy]
+  before_action :authorize_request, only: [:create, :update, :destroy]
+  before_action :set_organization, only: [:show, :update, :destroy]
   def index
     @organizations = Organization.all
+    render json: @organizations
   end
 
   def show
@@ -28,7 +29,6 @@ class OrganizationsController < ApplicationController
       render json: @organization, status: :created
     else
       render json: @organization.errors, status: :unprocessable_entity
-
     end
   end
 

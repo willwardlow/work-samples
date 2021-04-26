@@ -1,15 +1,15 @@
 class UsersController < ApplicationController
-  before_action :set_user, only[:show, :update, :destroy]
+  before_action :set_user, only: [:show, :update, :destroy]
 
   #GET /users
   def index
     @users = User.all
-    render json: @users, include: [:organization, :shift]
+    render json: @users, include: [:organization, :shifts]
   end
 
   #SHOW /users/1
   def show
-    render json: @user, include: [:organization, :shift]
+    render json: @user, include: [:organization, :shifts]
   end
 
   #POST /users
@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     if @user.save
       @token = encode({ id: @user.id})
       render json: {
-        user: @user.attrbutes.except("password_digest"),
+        user: @user.attrbutes.except("password"),
         token: @token
       }, include: :organization, status: :created
       else
@@ -50,6 +50,6 @@ class UsersController < ApplicationController
 
   #allow trusted parameters through
   def user_params
-    params.require(:user).permit(:password, :name, :email_address)
+    params.require(:user).permit(:password, :name, :email_address, :organization_id)
   end
 end
