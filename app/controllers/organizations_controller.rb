@@ -1,5 +1,6 @@
 class OrganizationsController < ApplicationController
-  before_action :set_organization, [:update, :destroy]
+  before_action :authorize_request, only: [:show, :create, :update, :destroy]
+  before_action :set_organization, only: [:update, :destroy]
   def index
     @organizations = Organization.all
   end

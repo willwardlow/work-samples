@@ -1,4 +1,5 @@
 class ShiftsController < ApplicationController
+  before_action :authorize_request, only: [:show, :create, :update, :destroy]
   before_action :set_shift, only: [:show, :update, :destroy]
 
   def index
