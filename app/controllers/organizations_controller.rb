@@ -7,7 +7,7 @@ class OrganizationsController < ApplicationController
   end
 
   def show
-    render json: @organization
+    render json: @organization, include: :users
   end
 
   def create

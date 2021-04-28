@@ -19,13 +19,13 @@ class UsersController < ApplicationController
     if @user.save
       @token = encode({ id: @user.id})
       render json: {
-        user: @user.attrbutes.except("password"),
+        user: @user.attributes.except("password_digest"),
         token: @token
-      }, include: :organization, status: :created
-      else
-        render json: @user.errors, status: :unprocessable_entity
-      end
+      }, status: :created
+    else
+      render json: @user.errors, status: :unprocessable_entity
     end
+  end
 
     #PATCH/PUT /users/1
     def update
@@ -50,6 +50,6 @@ class UsersController < ApplicationController
 
   #allow trusted parameters through
   def user_params
-    params.require(:user).permit(:password, :name, :email_address, :organization_id)
+    params.require(:user).permit(:email_address, :name, :password, :organization)
   end
 end

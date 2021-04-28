@@ -10,7 +10,6 @@ class ApplicationController < ActionController::API
     decoded = JWT.decode(token, SECRET_KEY)[0]
     HashWithIndifferentAccess.new decoded
   end
-end
 
 def authorize_request
   header = request.headers['Authorization']
@@ -23,4 +22,6 @@ def authorize_request
   rescue JWT::DecodeError => e
     render json: { errors: e.message }, status: :unauthorized
   end
+end
+
 end
