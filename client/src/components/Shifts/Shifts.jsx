@@ -1,9 +1,106 @@
-import React from 'react'
+import { useParams } from 'react-router-dom';
+
 
 export default function Shifts(props) {
+  const { orgs, shifts, users } = props;
+  const { id } = useParams();
+
+
+  const employees = shifts.filter(shift => shift.user.organization_id === Number(id));
+  const selectedOrg = orgs.find(org => org.id === Number(id));
+
+  //functions to extract date parts and calculations from shift object:
+
+  //pulling the date and displaying it as MM/DD/YYYY format
+  const extractDate = (dateString) => {
+    const t = dateString.indexOf('T');
+    const date = dateString.slice(0, t).split('-');
+    return date[1] + '/' + date[2] + '/' + date[0]
+  }
+
+  //pulling the time and displaying it in 24 hour format
+  const extractTime = (dateString) => {
+    const t = dateString.indexOf('T')
+    const colon = dateString.lastIndexOf(':')
+    const time = dateString.slice(t + 1, colon)
+    return time
+  }
+
+  //calculating the time difference between start, break, and finish:
+
+  const timeDifference = (startTime, finishTime, breakLength) => {
+    let hrs = 0;
+    let mins = 0;
+
+    //splitting timestamps to hour and minutes & converting to decimal notation 
+    const start = extractTime(startTime).split(':');
+    const finish = extractTime(finishTime).split(':');
+    hrs = Number(finish[0]) - Number(start[0]);
+    if (start[1] > finish[1]) {
+      mins = Number(start[1]) - Number(finish[1]) - breakLength;
+    } else {
+      mins = Number(finish[1]) - Number(start[1]) - breakLength;
+    }
+
+    return (hrs+(mins/60)).toFixed(2)
+  }
+
+  //calculating shift cost:
+  const shiftCost = (startTime, finishTime, breakLength, shiftCost) => {
+
+  //getting day of week
+    const date = Date(startTime).split(' ')
+    const day = date[0];
+
+    const time = timeDifference(startTime, finishTime, breakLength);
+    
+    if (day === 'Sun') {
+      return `$ ${time * (shiftCost * 2)}`;
+    } else {
+      return `$ ${time * shiftCost}`;
+    }
+  
+  }
+
+
+  console.log(employees)
   return (
     <div className='org-shifts'>
-      
+      {selectedOrg?.name}
+      <table>
+      <tr>
+      <th>Employee Name</th>
+      <th>Shift Date</th>
+      <th>Start Time</th>
+      <th>Finish Time</th>
+      <th>Break Length (minutes)</th>
+      <th>Hrs Worked</th>
+        <th>Shift Cost</th>
+        </tr>
+        {/* map function to populate shifts */}
+      {employees.map((employee, index) => (
+          <tr key={index}>
+          <td>{employee.user.name}</td>
+          <td>{ extractDate(employee.start)}</td>
+          {/* <td>{moment(employee.start).format('MM/DD/YYYY')}</td> */}
+          <td>{extractTime(employee.start)}</td>
+          <td>{extractTime(employee.finish)}</td>
+          <td>{employee.break_length}</td>
+          <td>{timeDifference(employee.start, employee.finish, employee.break_length)}</td>
+          <td>{shiftCost(employee.start, employee.finish, employee.break_length, selectedOrg.hourly_rate)} </td>
+          </tr>
+      ))}
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+
     </div>
   )
 }

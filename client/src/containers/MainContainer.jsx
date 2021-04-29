@@ -5,12 +5,15 @@ import {getAllOrgs, postOrg, putOrg, destroyOrg} from '../services/orgs'
 import Edit from '../screens/Edit/Edit';
 import Home from '../screens/Home/Home';
 import { getAllShifts } from '../services/shifts';
+import Shifts from '../components/Shifts/Shifts';
+import { getAllUsers } from '../services/users';
 
 export default function MainContainer(props) {
 
   const { handleLogout, currentUser } = props;
   const [orgs, setOrgs] = useState([]);
   const [shifts, setShifts] = useState([])
+  const [users, setUsers] = useState([]);
   const history = useHistory();
 
   useEffect(() => {
@@ -26,9 +29,20 @@ export default function MainContainer(props) {
       const shiftList = await getAllShifts();
       setShifts(shiftList);
     }
-  })
+    getShifts();
+  }, [])
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const userList = await getAllUsers();
+      setUsers(userList);
+    }
+    getUsers();
+  }, [])
+
 
   const handleJoin = () => {
+    const organization = orgs.find
     currentUser.organization_id = organization.id;
   }
 
@@ -57,14 +71,20 @@ export default function MainContainer(props) {
   }
   
   
-  
   return (
     <Switch>
-    
+
       <Route path='/orgs/:id/edit'>
         <Edit handleUpdate={handleUpdate} handleDelete={ handleDelete} orgs={orgs} />
       </Route>
 
+      <Route path='/orgs/:id'>
+        <Shifts
+          orgs={orgs}
+          shifts={shifts}
+          users={users}
+          />
+      </Route>
       <Route path='/orgs'>
         <Home currentUser={currentUser}
           orgs={orgs}
