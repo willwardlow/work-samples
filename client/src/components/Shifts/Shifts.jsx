@@ -1,10 +1,26 @@
 import { useParams } from 'react-router-dom';
-
+import { useState } from 'react';
 
 export default function Shifts(props) {
-  const { orgs, shifts, users } = props;
+  const { orgs, shifts, handleShiftCreate, currentUser } = props;
   const { id } = useParams();
 
+  const [shiftData, setShiftData] = useState({
+    start: '',
+    finish: '',
+    user_id: currentUser?.id,
+    break_length: 0,
+  })
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setShiftData(prevState => ({
+      ...prevState,
+      [name]:value
+    }))
+  }
+
+  const { start, finish, user_id, break_length } = shiftData;
 
   const employees = shifts.filter(shift => shift.user.organization_id === Number(id));
   const selectedOrg = orgs.find(org => org.id === Number(id));
@@ -59,11 +75,8 @@ export default function Shifts(props) {
     } else {
       return `$ ${time * shiftCost}`;
     }
-  
   }
 
-
-  console.log(employees)
   return (
     <div className='org-shifts'>
       {selectedOrg?.name}
@@ -82,7 +95,6 @@ export default function Shifts(props) {
           <tr key={index}>
           <td>{employee.user.name}</td>
           <td>{ extractDate(employee.start)}</td>
-          {/* <td>{moment(employee.start).format('MM/DD/YYYY')}</td> */}
           <td>{extractTime(employee.start)}</td>
           <td>{extractTime(employee.finish)}</td>
           <td>{employee.break_length}</td>
@@ -91,13 +103,36 @@ export default function Shifts(props) {
           </tr>
       ))}
         <tr>
+          <td>{currentUser?.name}</td>
+          <td>
+            <input type='datetime-local'
+              name='start'
+              value={start}
+              onChange={handleChange}/>
+          </td>
+          <td>
+            <input type='datetime-local'
+              name='finish'
+              value={finish}
+              onChange={handleChange}
+              />
+          </td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>
+            <input type='number'
+              name='break_length'
+              value={break_length}
+              onChange={handleChange}
+              />
+          </td>
+          
+          <td>
+            <button onClick={(e) => {
+              e.preventDefault();
+              handleShiftCreate(shiftData)
+            }}
+            > Create Shift</button>
+          </td>
         </tr>
       </table>
 

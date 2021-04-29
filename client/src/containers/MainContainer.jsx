@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import {getAllOrgs, postOrg, putOrg, destroyOrg} from '../services/orgs'
 import Edit from '../screens/Edit/Edit';
 import Home from '../screens/Home/Home';
-import { getAllShifts } from '../services/shifts';
+import { getAllShifts, postAShift } from '../services/shifts';
 import Shifts from '../components/Shifts/Shifts';
 import { getAllUsers } from '../services/users';
 
@@ -54,7 +54,7 @@ export default function MainContainer(props) {
   const handleCreate = async(orgData) => {
     const newOrg = await postOrg(orgData);
     setOrgs(prevState => [...prevState, newOrg]);
-    history.push('/')
+    history.push('/orgs')
   }
 
   const handleUpdate = async (id, orgData) => {
@@ -67,7 +67,13 @@ export default function MainContainer(props) {
   const handleDelete = async (id) => {
     await destroyOrg(id);
     setOrgs(prevState => prevState.filter((org) => org.id !== Number(id)))
-    history.push('/home')
+    history.push('/orgs')
+  }
+
+  const handleShiftCreate = async (shiftData) => {
+    const newShift = await postAShift(shiftData);
+    setShifts(prevState => [...prevState, newShift]);
+    history.push('/orgs/:id')
   }
   
   
@@ -83,6 +89,8 @@ export default function MainContainer(props) {
           orgs={orgs}
           shifts={shifts}
           users={users}
+          handleShiftCreate={handleShiftCreate}
+          currentUser={currentUser}
           />
       </Route>
       <Route path='/orgs'>

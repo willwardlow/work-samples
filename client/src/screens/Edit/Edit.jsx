@@ -11,7 +11,7 @@ export default function Edit(props) {
   const { name, hourly_rate } = formData;
   const { handleUpdate, handleDelete, orgs} = props;
   const { id } = useParams();
-  console.log(id);
+
 
   useEffect(() => {
     const prefillFormData = () => {
