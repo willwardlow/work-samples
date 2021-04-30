@@ -26,7 +26,7 @@ puts " #{Organization.count} organizations created"
 puts " #{User.count} users created"
 
 #seeding shifts:
-@morning = Shift.create!(user: @will, start: DateTime.new(2021, 4, 26, 8, 00, 00 ) , finish: DateTime.new(2021, 4, 26, 1, 30, 00), break_length: 20 )
+@morning = Shift.create!(user: @will, start: DateTime.new(2021, 4, 26, 8, 00, 00 ) , finish: DateTime.new(2021, 4, 26, 13, 30, 00), break_length: 20 )
 @evening = Shift.create!(user: @will, start: DateTime.new(2021, 4, 27, 15, 30, 00), finish: DateTime.new(2021, 4, 27, 22, 00, 00), break_length: 20 )
 
 puts " #{Shift.count} shifts created"

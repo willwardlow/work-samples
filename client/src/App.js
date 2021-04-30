@@ -28,7 +28,7 @@ function App() {
   const handleLogin = async (formData) => {
     const userData = await loginUser(formData);
     setCurrentUser(userData);
-    history.push('/home');
+    history.push('/orgs');
   }
 
   const handleLogout = () => {
@@ -41,7 +41,7 @@ function App() {
   const handleRegister = async (formData) => {
     const userData = await registerUser(formData);
     setCurrentUser(userData);
-    history.push('/home');
+    history.push('/orgs');
   }
 
   return (
@@ -57,7 +57,7 @@ function App() {
           </Route>
 
           <Route path='/orgs'>
-            <MainContainer handleLogout={handleLogout} currentUser={currentUser}/>
+            <MainContainer handleLogout={handleLogout} currentUser={currentUser} setCurrentUser={setCurrentUser}/>
           </Route>
 
           <Route path='/'>

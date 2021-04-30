@@ -4,7 +4,7 @@ class ShiftsController < ApplicationController
 
   def index
     @shifts=Shift.all
-    render json: @shifts
+    render json: @shifts, include: :user
   end
 
   def show
@@ -43,6 +43,6 @@ class ShiftsController < ApplicationController
   end
 
   def shift_params
-    params.require(:shift).permit(:user, :start, :finish, :break_length)
+    params.require(:shift).permit(:user_id, :start, :finish, :break_length)
   end
 end

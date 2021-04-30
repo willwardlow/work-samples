@@ -1,9 +1,9 @@
-
+import {Link} from 'react-router-dom'
 export default function Layout(props) {
 
-  const {currentUser, handleLogout} = props
   return (
     <div>
+      <Link to="/"> Adnat </Link>
       {props.children}
     </div>
   )

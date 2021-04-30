@@ -1,68 +1,74 @@
-import { useState, useEffect } from 'react';
-import { Link, useParams  } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 
 export default function Edit(props) {
-  
-  const [formData, setFormData ] = useState({
-    name: '',
-    hourly_rate: ''
-  })
+  const [formData, setFormData] = useState({
+    name: "",
+    hourly_rate: "",
+  });
 
   const { name, hourly_rate } = formData;
-  const { handleUpdate, handleDelete, orgs} = props;
+  const { handleUpdate, handleDelete, orgs } = props;
   const { id } = useParams();
-
 
   useEffect(() => {
     const prefillFormData = () => {
-      const singleOrg = orgs.find(org => org.id === Number(id));
+      const singleOrg = orgs.find((org) => org.id === Number(id));
       setFormData({
         name: singleOrg.name,
-        hourly_rate: singleOrg.hourly_rate
-      })
-    }
+        hourly_rate: singleOrg.hourly_rate,
+      });
+    };
 
     if (orgs.length) {
       prefillFormData();
     }
-  }, [orgs, id])
+  }, [orgs, id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      [name]:value
-    }))
-  }
+      [name]: value,
+    }));
+  };
 
   return (
-    <div className='edit-container'>
+    <div className="edit-container">
       Edit Organization
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        handleUpdate(id,formData)
-      }}>
-        <label htmlFor='name'> Name:
-        <input
-            type='text'
-            name='name'
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleUpdate(id, formData);
+        }}
+      >
+        <label htmlFor="name">
+          {" "}
+          Name:
+          <input
+            type="text"
+            name="name"
             value={name}
             required
             onChange={handleChange}
-          /></label>
-        
-        <label htmlFor='hourly_rate'>
+          />
+        </label>
+
+        <label htmlFor="hourly_rate">
           <input
-            type='number'
-            name='hourly_rate'
+            type="number"
+            name="hourly_rate"
             value={hourly_rate}
             required
-            onChange={handleChange}/>
-          </label>
+            onChange={handleChange}
+          />
+        </label>
 
-        <button type='submit'>Update</button>
-        <Link to='/home' onClick={() => handleDelete(id)}>Delete</Link>
+        <button type="submit">Update</button>
+        <Link to="/orgs" onClick={() => handleDelete(id)}>
+          Delete
+        </Link>
       </form>
     </div>
-  )
+  );
 }

@@ -1,11 +1,9 @@
-
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function Create(props) {
-  
   const [formData, setFormData] = useState({
-    name: '',
-    hourly_rate: ''
+    name: "",
+    hourly_rate: "",
   });
 
   const { name, hourly_rate } = formData;
@@ -14,45 +12,42 @@ export default function Create(props) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      [name]:value
-    }))
-  }
+      [name]: value,
+    }));
+  };
 
   return (
-    <div className='create-container'>
+    <div className="create-container">
       <h2>Create Organization</h2>
-      <form className='create-org'
+      <form
+        className="create-org"
         onSubmit={(e) => {
           e.preventDefault();
           handleCreate(formData);
           handleJoin();
-      }}>
-        <label htmlFor='name'>
+        }}
+      >
+        <label htmlFor="name">
           Name
-           <input
-            name='name'
-            value={name}
-            required
-            onChange={handleChange}
-            />
+          <input name="name" value={name} required onChange={handleChange} />
         </label>
 
-        <label htmlFor='hourly-rate'>
+        <label htmlFor="hourly-rate">
           Hourly Rate: $
           <input
-            name='hourly_rate'
+            name="hourly_rate"
             value={hourly_rate}
-            type='number'
+            type="number"
             required
             onChange={handleChange}
           />
           per hour
         </label>
 
-        <button type='submit'> Create &#38; Join </button>
+        <button type="submit"> Create &#38; Join </button>
       </form>
     </div>
-  )
+  );
 }
