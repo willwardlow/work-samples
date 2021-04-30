@@ -3,7 +3,7 @@ class OrganizationsController < ApplicationController
   before_action :set_organization, only: [:show, :update, :destroy]
   def index
     @organizations = Organization.all
-    render json: @organizations
+    render json: @organizations, include: :users
   end
 
   def show

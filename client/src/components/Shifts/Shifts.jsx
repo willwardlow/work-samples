@@ -5,6 +5,7 @@ export default function Shifts(props) {
   const { orgs, shifts, handleShiftCreate, currentUser } = props;
   const { id } = useParams();
 
+  //setting state for shiftData
   const [shiftData, setShiftData] = useState({
     start: "",
     finish: "",
@@ -12,6 +13,7 @@ export default function Shifts(props) {
     break_length: 0,
   });
 
+  //handle change function to set values
   const handleChange = (e) => {
     const { name, value } = e.target;
     setShiftData((prevState) => ({
@@ -20,11 +22,13 @@ export default function Shifts(props) {
     }));
   };
 
-  console.log(currentUser);
+  //unpacking shiftData elements
+  const { start, finish, break_length } = shiftData;
 
-  const { start, finish, user_id, break_length } = shiftData;
+  //find function to find selected organization
   const selectedOrg = orgs.find((org) => org.id === Number(id));
 
+  //finding all associated employees who has a shift at selectedOrg
   const employees = shifts.filter((shift) => shift.user.organization_id === selectedOrg.id);
   
 
@@ -54,6 +58,7 @@ export default function Shifts(props) {
     const start = extractTime(startTime).split(":");
     const finish = extractTime(finishTime).split(":");
     hrs = Number(finish[0]) - Number(start[0]);
+    //handling edge case if minutes of start/finish is less than/greater than the other
     if (start[1] > finish[1]) {
       mins = Number(start[1]) - Number(finish[1]) - breakLength;
     } else {
@@ -69,8 +74,10 @@ export default function Shifts(props) {
     const date = Date(startTime).split(" ");
     const day = date[0];
 
+    //calling above function get the time difference
     const time = timeDifference(startTime, finishTime, breakLength);
 
+    //handling optional problem # 6
     if (day === "Sun") {
       return `$ ${time * (shiftCost * 2)}`;
     } else {

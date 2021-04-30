@@ -41,18 +41,25 @@ export default function MainContainer(props) {
   }, []);
 
   const handleJoin = async (id, userData) => {
+    //finding organization that matches org in array and assigning id to currentUser
     const organization = orgs.find((org) => org.id === Number(id));
-    currentUser.organization_id = organization.id;
+    userData.organization_id = organization.id;
 
-    const updatedUser = await putAUser(id, userData)
+    //put request to update user
+    const updatedUser = await putAUser(userData.id, userData)
     setCurrentUser(prevState => [...prevState, updatedUser]);
   };
 
-  const handleLeave = () => {
+
+  const handleLeave = async() => {
+    //reassigning user's organization id to null
     currentUser.organization_id = null;
-    console.log(currentUser)
+    //put request to handle the update
+    const updatedUser = await putAUser(currentUser.id, currentUser)
+    setCurrentUser(prevState => [...prevState, updatedUser]);
   };
 
+  //Post request to create organization
   const handleCreate = async (orgData) => {
     const newOrg = await postOrg(orgData);
     setOrgs((prevState) => [...prevState, newOrg]);
@@ -61,6 +68,7 @@ export default function MainContainer(props) {
     
   };
 
+  //put request for updated organization data
   const handleUpdate = async (id, orgData) => {
     const updatedOrg = await putOrg(id, orgData);
     setOrgs((prevState) =>
@@ -71,18 +79,24 @@ export default function MainContainer(props) {
     history.push("/orgs");
   };
 
+  //delete request
   const handleDelete = async (id) => {
     await destroyOrg(id);
     setOrgs((prevState) => prevState.filter((org) => org.id !== Number(id)));
     history.push('/orgs');
   };
 
+  //post request to create shifts
   const handleShiftCreate = async (shiftData,id) => {
     const newShift = await postAShift(shiftData);
     setShifts((prevState) => [...prevState, newShift]);
-    history.push(`/orgs/${id}`);
     setCreated(true);
+
+    if (created) {
+      history.push(`/orgs/${id}`);
+    }
   };
+  
 
   return (
     <Switch>
